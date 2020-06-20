@@ -62,7 +62,7 @@ hv.opts.defaults(
 )
 
 
-class WxFlash():
+class WeatherFlash():
     def __init__(self):
         self.df_meta = pd.read_pickle(ASOS_META_PKL)
         self.stations = list(self.df_meta['stid'])
@@ -235,8 +235,11 @@ class WxFlash():
             width=275, margin=(5, 10, -25, 10))
 
         subtitle = pn.pane.Markdown(
-            f'<center>**Selected date\'s value shown and '
-            f'highlighted in red; climatology shown as dashed line.</center>',
+            f'<center>*Selected date\'s listed and '
+            f'highlighted in red; climatology shown as dashed line.</center>'
+            f'<a href="https://mesonet.agron.iastate.edu/request/daily.phtml" target="_blank">ASOS Data</a> | '
+            f'<a href="https://github.com/ahuang11/weatherflash" target="_blank">Source Code</a> | '
+            f'<a href="https://github.com/ahuang11/" target="_blank">Author\'s GitHub</a>*',
             width=275, margin=(-5, 10))
 
         layout = pn.Row(
@@ -248,5 +251,5 @@ class WxFlash():
         )
         return layout
 
-wxflash = WxFlash()
-wxflash.view().servable()
+weatherflash = WeatherFlash()
+weatherflash.view().servable(title='WeatherFlash')
