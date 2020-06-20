@@ -1,0 +1,5 @@
+numpy
+panel
+holoviews
+bokeh==2.0.2
+pandas
