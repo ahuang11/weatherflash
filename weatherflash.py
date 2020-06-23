@@ -108,7 +108,8 @@ class WeatherFlash():
 
         if station.upper() in ['KCMI', 'CMI']:
             self.df = pd.read_pickle('CMI.pkl')
-            return
+            if self.df.index.max().date == datetime.utcnow().date:
+                return
 
         df = pd.read_csv(URL_FMT.format(station=station, network=network),
                          index_col='day', parse_dates=True)
@@ -132,13 +133,13 @@ class WeatherFlash():
             df.loc[df[col] < 0, col] = np.nan
         self.df = df
 
+        if station.upper() in ['KCMI', 'CMI']:
+            self.df.to_pickle('CMI.pkl')
+
     def create_hist(self, df_sel, var):
         # keep histogram pairs consistent with the same xlim + ylim
         # since the pairs are likely to be min + max or somehow related
         # for more intuitive comparison between the pairs
-        if var == 'Precip In':
-            print(df_sel)
-
         col_ind = list(df_sel.columns).index(var)
         if col_ind % 2 == 0:
             var_ref = df_sel.columns[col_ind + 1]
@@ -318,7 +319,7 @@ class WeatherFlash():
 
         left_col = pn.Column(
             title, self.progress,
-            self.station_input, self.date_input, self.highlights,
+            self.station_input, self.date_input,
             subtitle, sizing_mode='stretch_height')
 
         self.tabs = pn.Tabs(sizing_mode='stretch_both',
