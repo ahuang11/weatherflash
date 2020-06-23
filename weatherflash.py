@@ -106,11 +106,6 @@ class WeatherFlash():
         _, self.name, _, _, _, self.ts, network = self.df_meta.loc[
             self.df_meta['stid'] == station.upper()].values[0]
 
-        if station.upper() in ['KCMI', 'CMI']:
-            self.df = pd.read_pickle('CMI.pkl')
-            if self.df.index.max().date == datetime.utcnow().date:
-                return
-
         df = pd.read_csv(URL_FMT.format(station=station, network=network),
                          index_col='day', parse_dates=True)
         df = df.drop(columns='station').rename_axis('time')
@@ -132,9 +127,6 @@ class WeatherFlash():
         for col in DF_COLS_POSITIVE:
             df.loc[df[col] < 0, col] = np.nan
         self.df = df
-
-        if station.upper() in ['KCMI', 'CMI']:
-            self.df.to_pickle('CMI.pkl')
 
     def create_hist(self, df_sel, var):
         # keep histogram pairs consistent with the same xlim + ylim
